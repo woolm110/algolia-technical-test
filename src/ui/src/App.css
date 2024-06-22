@@ -1,0 +1,145 @@
+ul,
+ol {
+  list-style: none;
+}
+
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Search Box Styles */
+.search-box-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.ais-SearchBox {
+  display: flex;
+  justify-content: center;
+}
+
+.ais-SearchBox-input {
+  width: 100%;
+  max-width: 1200px;
+  height: 50px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ais-SearchBox-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+}
+
+.ais-SearchBox-submit,
+.ais-SearchBox-reset {
+  display: none;
+}
+
+.ais-Hits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.ais-Hits-item {
+  padding: 0;
+  list-style: none;
+}
+
+/* Container for categories and results */
+.search-content {
+  display: flex;
+  gap: 20px;
+}
+
+/* Refinement List Styles */
+.refinement-list-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  max-width: 300px;
+}
+
+.ais-RefinementList {
+  margin: 0;
+  padding: 0;
+}
+
+.ais-RefinementList-item {
+  margin-bottom: 10px;
+}
+
+.ais-RefinementList-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.ais-RefinementList-label:hover {
+  background-color: #f0f0f0;
+}
+
+.ais-RefinementList-count {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 14px;
+}
+
+/* Hit Item Styles */
+.hit-item {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
+}
+
+.hit-item-inner {
+  padding: 20px;
+}
+
+.hit-item img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  align-self: center;
+}
+
+.hit-item strong {
+  font-size: 18px;
+  color: #007bff;
+}
+
+.hit-item div {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
