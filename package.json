@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "algoliasearch": "^4.23.3",
+    "stream-json": "^1.8.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "import": "npm run build && node dist/importData.js",
+    "update": "npm run build && node dist/updateData.js",
+    "delete": "npm run build && node dist/deleteIndex.js"
+  }
+}
