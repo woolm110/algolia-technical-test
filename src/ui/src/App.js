@@ -1,6 +1,6 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, SearchBox, Hits, RefinementList } from 'react-instantsearch-dom';
+import { InstantSearch, SearchBox, Hits, RefinementList, Pagination } from 'react-instantsearch';
 import './App.css';
 
 const searchClient = algoliasearch('7JU241Q6VH', 'fbe80fe18f09ceb6a0883b332c1052b0');
@@ -30,11 +30,15 @@ function App() {
               attribute="categories"
               searchable={false}
               searchablePlaceholder="Search categories"
+              operator="or"
+              limit={5}
+              showMoreLimit={10}
               showMore={true}
             />
           </div>
           <div className="hits-container">
             <Hits hitComponent={Hit} />
+            <Pagination className="Pagination" />
           </div>
         </div>
       </InstantSearch>
