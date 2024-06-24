@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InstantSearch, Hits, Pagination, Configure, HierarchicalMenu } from 'react-instantsearch';
+import { InstantSearch, Hits, Pagination, Configure, HierarchicalMenu, RefinementList, SortBy, Breadcrumb } from 'react-instantsearch';
 
 import '@algolia/autocomplete-theme-classic';
 import 'instantsearch.css/themes/satellite.css';
@@ -8,7 +8,7 @@ import './App.css';
 import { SearchBoxWithSuggestions } from './components/AutoComplete';
 import { Hit } from './components/Hit';
 import { searchClient } from './config/SearchClient';
-import { INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_HIERARCHICAL_CATEGORIES } from './config/Constants';
+import { INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_HIERARCHICAL_CATEGORIES, INSTANT_SEARCH_SORT_POPULAR, INSTANT_SEARCH_SORT_PRICE_DESC, INSTANT_SEARCH_SORT_PRICE_ASC } from './config/Constants';
 
 import aa from 'search-insights';
 
@@ -54,6 +54,16 @@ function App() {
         <div className="search-box-container">
           <SearchBoxWithSuggestions />
         </div>
+        <div className="header-container">
+          <Breadcrumb attributes={INSTANT_SEARCH_HIERARCHICAL_CATEGORIES} />
+          <SortBy
+            items={[
+              { label: 'Popular', value: INSTANT_SEARCH_SORT_POPULAR },
+              { label: 'Price (Highest)', value: INSTANT_SEARCH_SORT_PRICE_DESC },
+              { label: 'Price (Lowest)', value: INSTANT_SEARCH_SORT_PRICE_ASC },
+            ]}
+          />
+        </div>
         <div className="search-content">
           <div className="refinement-list-container">
             <h3>Categories</h3>
@@ -64,6 +74,42 @@ function App() {
                 showMoreButtonText({ isShowingMore }) {
                   return isShowingMore ? 'Show less categories' : 'Show more categories';
                 },
+              }}
+            />
+            <h3>Brand</h3>
+            <RefinementList
+              attribute="brand"
+            />
+            <h3>Price</h3>
+            <RefinementList
+              attribute="price_range"
+              transformItems={(items) => {
+                return items.map((item) => ({
+                  ...item,
+                  label: `£${item.label}`,
+                }));
+              }}
+            />
+            <h3>Rating</h3>
+            <RefinementList
+              attribute="rating"
+              sortBy={['name']}
+              transformItems={(items) => {
+                return items.map((item) => ({
+                  ...item,
+                  label: `${item.label} stars`,
+                }));
+              }}
+            />
+            <h3>Free Shipping</h3>
+            <RefinementList
+              attribute="free_shipping"
+              sortBy={['name']}
+              transformItems={(items) => {
+                return items.map((item) => ({
+                  ...item,
+                  label: item.label === 'true' ? 'Yes' : 'No',
+                }));
               }}
             />
           </div>

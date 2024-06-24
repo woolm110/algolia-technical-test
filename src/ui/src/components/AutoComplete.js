@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, createElement, Fragment, useCallback, useMemo } from 'react';
-import { createRoot } from 'react-dom/client';
-
-import { useInstantSearch, useSearchBox } from 'react-instantsearch';
 import { autocomplete } from '@algolia/autocomplete-js';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import React, { createElement, Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
+import { useInstantSearch, useSearchBox } from 'react-instantsearch';
 
+import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from '../config/Constants';
 import { searchClient } from '../config/SearchClient';
 
 import '@algolia/autocomplete-theme-classic';
-
-import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from '../config/Constants';
 
 function Autocomplete(props) {
   const containerRef = useRef(null);
@@ -57,25 +56,62 @@ export function SearchBoxWithSuggestions() {
   const { query } = useSearchBox();
 
   const plugins = useMemo(() => {
-    const querySuggestionsPlugin = createQuerySuggestionsPlugin({
-      indexName: INSTANT_SEARCH_QUERY_SUGGESTIONS,
-      searchClient,
-      getSearchParams: () => ({ clickAnalytics: true }),
+    const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
+      key: 'search',
+      limit: 3,
       transformSource({ source }) {
         return {
           ...source,
-          onSelect({ item }) {
-            setIndexUiState((indexUiState) => ({
-              ...indexUiState,
-              query: item.query
-            }));
+          templates: {
+            ...source.templates,
+            header({ state }) {
+              if (state.query) {
+                return null;
+              }
+
+              return (
+                <Fragment>
+                  <span className="aa-SourceHeaderTitle">Your searches</span>
+                  <div className="aa-SourceHeaderLine" />
+                </Fragment>
+              );
+            },
+          },
+        };
+      },
+    });
+    const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+      searchClient,
+      indexName: INSTANT_SEARCH_QUERY_SUGGESTIONS,
+      getSearchParams() {
+        return recentSearchesPlugin.data.getAlgoliaSearchParams({
+          hitsPerPage: 5,
+        });
+      },
+      transformSource({ source }) {
+        return {
+          ...source,
+          templates: {
+            ...source.templates,
+            header({ state }) {
+              if (state.query) {
+                return null;
+              }
+
+              return (
+                <Fragment>
+                  <span className="aa-SourceHeaderTitle">Popular searches</span>
+                  <div className="aa-SourceHeaderLine" />
+                </Fragment>
+              );
+            },
           },
         };
       },
     });
 
-    return [querySuggestionsPlugin];
-  }, [setIndexUiState]);
+    return [querySuggestionsPlugin, recentSearchesPlugin];
+  }, []);
 
   const initialState = useMemo(() => ({ query }), [query]);
 
@@ -104,6 +140,8 @@ export function SearchBoxWithSuggestions() {
       placeholder="Search for products…"
       plugins={plugins}
       initialState={initialState}
+      openOnFocus={true}
+      insights={true}
       onReset={onReset}
       onSubmit={onSubmit}
     />
