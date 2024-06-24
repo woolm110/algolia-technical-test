@@ -1,13 +1,3 @@
-##############################################
-#
-# Ostmodern .gitignore
-#
-##############################################
-
-# Environment vars for testing only
-environment_vars.sh
-environment_vars_prod.sh
-
 # IDEs
 .idea
 
@@ -149,7 +139,3 @@ cdk.out
 .aws-sam
 
 .npmignore
-
-bootstraps/ui/site/build
-customers/maidthorn/countryline/automated-tests/cypress/screenshots/
-customers/maidthorn/countryline/automated-tests/cypress/videos/
