@@ -35,7 +35,10 @@ export function SearchBoxWithSuggestions() {
           },
           templates: {
             ...source.templates,
-            header() {
+            header({ state }) {
+              if (state.query) {
+                return null;
+              }
               return (
                 <Fragment>
                   <span className="aa-SourceHeaderTitle">Your searches</span>

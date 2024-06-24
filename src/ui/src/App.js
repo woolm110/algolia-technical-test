@@ -3,7 +3,7 @@ import { Breadcrumb, Configure, HierarchicalMenu, Hits, InstantSearch, Paginatio
 import aa from 'search-insights';
 
 import { SearchBoxWithSuggestions } from './components/AutoComplete.component';
-import { Hit } from './components/Hit';
+import { Hit } from './components/Hit.component';
 import { INSTANT_SEARCH_HIERARCHICAL_CATEGORIES, INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_SORT_POPULAR, INSTANT_SEARCH_SORT_PRICE_ASC, INSTANT_SEARCH_SORT_PRICE_DESC } from './config/Constants';
 import { searchClient } from './config/SearchClient';
 
