@@ -2,7 +2,9 @@ import React, { useCallback, useMemo } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Hits, Pagination, Configure, useInstantSearch, useSearchBox, HierarchicalMenu } from 'react-instantsearch';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+
 import '@algolia/autocomplete-theme-classic';
+import 'instantsearch.css/themes/satellite.css';
 
 import './App.css';
 import { Autocomplete } from './AutoComplete';
@@ -95,7 +97,12 @@ function App() {
         </div>
         <div className="search-content">
           <div className="refinement-list-container">
-            <HierarchicalMenu attributes={INSTANT_SEARCH_HIERARCHICAL_CATEGORIES} />
+            <h3>Categories</h3>
+            <HierarchicalMenu attributes={INSTANT_SEARCH_HIERARCHICAL_CATEGORIES} showMore={true} translations={{
+              showMoreButtonText({ isShowingMore }) {
+                return isShowingMore ? 'Show less categories' : 'Show more categories';
+              },
+            }} />
           </div>
           <div className="hits-container">
             <Hits hitComponent={Hit} />
