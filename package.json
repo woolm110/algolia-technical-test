@@ -11,8 +11,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "import": "npm run build && node dist/importData.js",
-    "update": "npm run build && node dist/updateData.js",
-    "delete": "npm run build && node dist/deleteIndex.js"
+    "import": "npm run build && node dist/ingest/importData.js",
+    "update": "npm run build && node dist/ingest/updateData.js",
+    "delete": "npm run build && node dist/ingest/deleteIndex.js"
   }
 }
