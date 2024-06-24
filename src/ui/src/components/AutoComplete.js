@@ -24,6 +24,7 @@ function Autocomplete(props) {
     const search = autocomplete({
       insights: true,
       container: containerRef.current,
+      getSearchParams: () => ({ clickAnalytics: true }),
       renderer: { createElement, Fragment, render: () => { } },
       render({ children }, root) {
         if (!panelRootRef.current || rootRef.current !== root) {
