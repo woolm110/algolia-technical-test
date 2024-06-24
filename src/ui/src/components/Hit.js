@@ -5,7 +5,9 @@ export const Hit = ({ hit, onClick }) => (
       <div>
         <strong>{hit.name}</strong>
       </div>
+      <div>Rating: {hit.rating} stars</div>
       <div>{hit.description}</div>
+      <div className="hit-item-price"><em>£{hit.price}</em></div>
     </div>
   </div>
 );
