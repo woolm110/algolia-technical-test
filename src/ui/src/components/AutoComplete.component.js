@@ -1,50 +1,13 @@
-import { autocomplete } from '@algolia/autocomplete-js';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
-import React, { createElement, Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
+import React, { Fragment, useCallback, useMemo } from 'react';
 import { useInstantSearch, useSearchBox } from 'react-instantsearch';
 
 import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from '../config/Constants';
 import { searchClient } from '../config/SearchClient';
+import { Autocomplete } from '../services/AutoComplete.service';
 
 import '@algolia/autocomplete-theme-classic';
-
-function Autocomplete(props) {
-  const containerRef = useRef(null);
-  const panelRootRef = useRef(null);
-  const rootRef = useRef(null);
-
-  useEffect(() => {
-    if (!containerRef.current) {
-      return undefined;
-    }
-
-    const search = autocomplete({
-      insights: true,
-      container: containerRef.current,
-      getSearchParams: () => ({ clickAnalytics: true }),
-      renderer: { createElement, Fragment, render: () => { } },
-      render({ children }, root) {
-        if (!panelRootRef.current || rootRef.current !== root) {
-          rootRef.current = root;
-
-          panelRootRef.current?.unmount();
-          panelRootRef.current = createRoot(root);
-        }
-
-        panelRootRef.current.render(children);
-      },
-      ...props,
-    });
-
-    return () => {
-      search.destroy();
-    };
-  }, [props]);
-
-  return <div ref={containerRef} />;
-}
 
 /**
  * SearchBoxWithSuggestions
@@ -53,22 +16,26 @@ function Autocomplete(props) {
  */
 export function SearchBoxWithSuggestions() {
   const { setIndexUiState } = useInstantSearch();
-  const { query } = useSearchBox();
+  const { query, refine: setQuery } = useSearchBox();
 
   const plugins = useMemo(() => {
     const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
       key: 'search',
-      limit: 3,
+      limit: 5,
       transformSource({ source }) {
         return {
           ...source,
+          onSelect({ item }) {
+            setQuery(item.label);
+            setIndexUiState((indexUiState) => ({
+              ...indexUiState,
+              query: item.label,
+              page: 1,
+            }));
+          },
           templates: {
             ...source.templates,
-            header({ state }) {
-              if (state.query) {
-                return null;
-              }
-
+            header() {
               return (
                 <Fragment>
                   <span className="aa-SourceHeaderTitle">Your searches</span>
@@ -80,6 +47,7 @@ export function SearchBoxWithSuggestions() {
         };
       },
     });
+
     const querySuggestionsPlugin = createQuerySuggestionsPlugin({
       searchClient,
       indexName: INSTANT_SEARCH_QUERY_SUGGESTIONS,
@@ -91,6 +59,14 @@ export function SearchBoxWithSuggestions() {
       transformSource({ source }) {
         return {
           ...source,
+          onSelect({ item }) {
+            setQuery(item.query);
+            setIndexUiState((indexUiState) => ({
+              ...indexUiState,
+              query: item.query,
+              page: 1,
+            }));
+          },
           templates: {
             ...source.templates,
             header({ state }) {
@@ -110,8 +86,8 @@ export function SearchBoxWithSuggestions() {
       },
     });
 
-    return [querySuggestionsPlugin, recentSearchesPlugin];
-  }, []);
+    return [recentSearchesPlugin, querySuggestionsPlugin];
+  }, [setIndexUiState, setQuery]);
 
   const initialState = useMemo(() => ({ query }), [query]);
 

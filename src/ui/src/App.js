@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { InstantSearch, Hits, Pagination, Configure, HierarchicalMenu, RefinementList, SortBy, Breadcrumb } from 'react-instantsearch';
+import { Breadcrumb, Configure, HierarchicalMenu, Hits, InstantSearch, Pagination, RefinementList, SortBy } from 'react-instantsearch';
+import aa from 'search-insights';
 
-import '@algolia/autocomplete-theme-classic';
-import 'instantsearch.css/themes/satellite.css';
+import { SearchBoxWithSuggestions } from './components/AutoComplete.component';
+import { Hit } from './components/Hit';
+import { INSTANT_SEARCH_HIERARCHICAL_CATEGORIES, INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_SORT_POPULAR, INSTANT_SEARCH_SORT_PRICE_ASC, INSTANT_SEARCH_SORT_PRICE_DESC } from './config/Constants';
+import { searchClient } from './config/SearchClient';
 
 import './App.css';
-import { SearchBoxWithSuggestions } from './components/AutoComplete';
-import { Hit } from './components/Hit';
-import { searchClient } from './config/SearchClient';
-import { INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_HIERARCHICAL_CATEGORIES, INSTANT_SEARCH_SORT_POPULAR, INSTANT_SEARCH_SORT_PRICE_DESC, INSTANT_SEARCH_SORT_PRICE_ASC } from './config/Constants';
-
-import aa from 'search-insights';
+import '@algolia/autocomplete-theme-classic';
+import 'instantsearch.css/themes/satellite.css';
 
 aa('init', {
   appId: '7JU241Q6VH',
