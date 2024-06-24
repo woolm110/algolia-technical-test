@@ -1,5 +1,5 @@
-export const Hit = ({ hit }) => (
-  <div className="hit-item">
+export const Hit = ({ hit, onClick }) => (
+  <div className="hit-item" onClick={() => onClick(hit)}>
     <div className="hit-item-inner">
       <img src={hit.image} alt={hit.name} />
       <div>
