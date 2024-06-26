@@ -1,6 +1,6 @@
 import { AlgoliaUploader } from './index';
 
-const INDEX_TO_DELETE = 'products';
+const INDEX_TO_DELETE = 'test';
 
 const uploader = new AlgoliaUploader(INDEX_TO_DELETE);
 

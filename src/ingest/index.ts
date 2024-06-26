@@ -1,6 +1,7 @@
 import algoliasearch from 'algoliasearch';
 import fs from 'fs';
 import { Transform } from 'stream';
+import { parseStringPromise } from 'xml2js';
 
 const StreamArray = require('stream-json/streamers/StreamArray');
 
@@ -31,11 +32,33 @@ export class AlgoliaUploader {
 
   private async assignStream() {
     if (typeof this.dataSource === 'string') {
-      this.stream = fs.createReadStream(this.dataSource).pipe(StreamArray.withParser());
+      if (this.isXmlString(this.dataSource)) {
+        const jsonObject = await this.convertXmlToJson(this.dataSource);
+
+        this.dataSource = jsonObject.map(item => item.root.row);
+        this.stream = this.createJsonStream();
+      } else {
+        this.stream = fs.createReadStream(this.dataSource).pipe(StreamArray.withParser());
+      }
     } else if (Array.isArray(this.dataSource)) {
       this.stream = this.createJsonStream();
     } else {
       throw new Error('Unsupported data source type');
+    }
+  }
+
+  private isXmlString(data: string): boolean {
+    const xmlPattern = /<[^>]+>/;
+
+    return xmlPattern.test(data.trim());
+  }
+
+  private async convertXmlToJson(xml: string): Promise<any[]> {
+    try {
+      const result = await parseStringPromise(xml, { explicitArray: false });
+      return Array.isArray(result) ? result : [result];
+    } catch (error) {
+      throw new Error('Error converting XML to JSON: ' + error.message);
     }
   }
 
