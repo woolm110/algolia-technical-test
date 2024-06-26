@@ -188,3 +188,8 @@ body {
 .ais-SortBy {
   display: inline-block;
 }
+
+.ais-ClearRefinements {
+  max-width: 160px;
+  margin: 0 0 20px;
+}
