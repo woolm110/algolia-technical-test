@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Configure, HierarchicalMenu, Hits, InstantSearch, Pagination, RefinementList, SortBy } from 'react-instantsearch';
+import { Breadcrumb, Configure, DynamicWidgets, HierarchicalMenu, Hits, InstantSearch, Pagination, RefinementList, SortBy } from 'react-instantsearch';
 import aa from 'search-insights';
 
 import { SearchBoxWithSuggestions } from './components/AutoComplete.component';
 import { Hit } from './components/Hit.component';
+import { Panel } from './components/Panel.component';
 import { INSTANT_SEARCH_HIERARCHICAL_CATEGORIES, INSTANT_SEARCH_INDEX_NAME, INSTANT_SEARCH_SORT_POPULAR, INSTANT_SEARCH_SORT_PRICE_ASC, INSTANT_SEARCH_SORT_PRICE_DESC } from './config/Constants';
 import { searchClient } from './config/SearchClient';
 
@@ -65,52 +66,59 @@ function App() {
         </div>
         <div className="search-content">
           <div className="refinement-list-container">
-            <h3>Categories</h3>
-            <HierarchicalMenu
-              attributes={INSTANT_SEARCH_HIERARCHICAL_CATEGORIES}
-              showMore={true}
-              translations={{
-                showMoreButtonText({ isShowingMore }) {
-                  return isShowingMore ? 'Show less categories' : 'Show more categories';
-                },
-              }}
-            />
-            <h3>Brand</h3>
-            <RefinementList
-              attribute="brand"
-            />
-            <h3>Price</h3>
-            <RefinementList
-              attribute="price_range"
-              transformItems={(items) => {
-                return items.map((item) => ({
-                  ...item,
-                  label: `£${item.label}`,
-                }));
-              }}
-            />
-            <h3>Rating</h3>
-            <RefinementList
-              attribute="rating"
-              sortBy={['name']}
-              transformItems={(items) => {
-                return items.map((item) => ({
-                  ...item,
-                  label: `${item.label} stars`,
-                }));
-              }}
-            />
-            <h3>Free Shipping</h3>
-            <RefinementList
-              attribute="free_shipping"
-              sortBy={['name']}
-              transformItems={(items) => {
-                return items.map((item) => ({
-                  ...item,
-                  label: item.label === 'true' ? 'Yes' : 'No',
-                }));
-              }}
-            />
+            <DynamicWidgets>
+              <Panel header="Categories">
+                <HierarchicalMenu
+                  attributes={INSTANT_SEARCH_HIERARCHICAL_CATEGORIES}
+                  showMore={true}
+                  translations={{
+                    showMoreButtonText({ isShowingMore }) {
+                      return isShowingMore ? 'Show less categories' : 'Show more categories';
+                    },
+                  }}
+                />
+              </Panel>
+              <Panel header="Brand">
+                <RefinementList
+                  attribute="brand"
+                />
+              </Panel>
+              <Panel header="Price">
+                <RefinementList
+                  attribute="price_range"
+                  transformItems={(items) => {
+                    return items.map((item) => ({
+                      ...item,
+                      label: `£${item.label}`,
+                    }));
+                  }}
+                />
+              </Panel>
+              <Panel header="Rating">
+                <RefinementList
+                  attribute="rating"
+                  sortBy={['name']}
+                  transformItems={(items) => {
+                    return items.map((item) => ({
+                      ...item,
+                      label: `${item.label} stars`,
+                    }));
+                  }}
+                />
+              </Panel>
+              <Panel header="Free Shipping">
+                <RefinementList
+                  attribute="free_shipping"
+                  sortBy={['name']}
+                  transformItems={(items) => {
+                    return items.map((item) => ({
+                      ...item,
+                      label: item.label === 'true' ? 'Yes' : 'No',
+                    }));
+                  }}
+                />
+              </Panel>
+            </DynamicWidgets>
           </div>
           <div className="hits-container">
             <Hits hitComponent={(props) => <Hit {...props} onClick={handleHitClick} />} />

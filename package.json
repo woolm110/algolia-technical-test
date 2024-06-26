@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "algoliasearch": "^4.23.3",
+    "fast-xml-parser": "^4.4.0",
     "stream-json": "^1.8.0",
     "yargs": "^17.7.2"
   },
