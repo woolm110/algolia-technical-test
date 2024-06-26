@@ -2,7 +2,6 @@ export function Panel({
   children,
   header,
 }) {
-  console.log('header :>> ', header);
   return (
     <div className="ais-Panel">
       {header && <div className="ais-Panel-header">{header}</div>}

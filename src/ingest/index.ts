@@ -33,10 +33,10 @@ export class AlgoliaUploader {
   }
 
   /**
- * assignStream
- * Create a JSON stream of data
- * for each data source type
- */
+   * assignStream
+   * Create a JSON stream of data
+   * for each data source type
+   */
   private async assignStream() {
     const dataSourceType = this.getDataSourceType();
 
@@ -219,11 +219,11 @@ export class AlgoliaUploader {
   }
 
   /**
-   * importInitialData
+   * importData
    * Full ingest of all fields and objects
    * Creates new records if they don't exist
    */
-  public async importInitialData() {
+  public async importData() {
     console.log('Starting full data update');
 
     await this.assignStream();
@@ -248,6 +248,9 @@ export class AlgoliaUploader {
 
         if (this.chunkSize >= this.maxChunkSize) {
           this.stream.pause();
+
+          console.log('Uploading data, bytes remaining', this.chunkSize);
+          console.log('Uploading data, records remaining', this.chunks.length);
 
           await this.uploadObjects(isUpdate);
         }
