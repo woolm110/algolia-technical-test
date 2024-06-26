@@ -1,8 +1,8 @@
 import { AlgoliaUploader } from './index';
 
-const INDEX_NAME = 'products';
-const FILE_PATH = 'public/products.json';
+const INDEX_NAME = 'test';
+const DATA_SOURCE = 'public/products.xml';
 
-const uploader = new AlgoliaUploader(INDEX_NAME, FILE_PATH);
+const uploader = new AlgoliaUploader(INDEX_NAME, DATA_SOURCE);
 
-uploader.importInitialData();
+uploader.importData();

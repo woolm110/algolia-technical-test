@@ -22,6 +22,7 @@ function App() {
   const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
 
   const handleHitClick = (hit) => {
+    console.log('hit :>> ', hit);
     setSelectedHit(hit);
   };
 
