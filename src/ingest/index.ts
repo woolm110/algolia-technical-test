@@ -33,45 +33,46 @@ export class AlgoliaUploader {
   }
 
   /**
-   * assignStream
-   * Create a JSON stream of data
-   * for each data source type
-   */
+ * assignStream
+ * Create a JSON stream of data
+ * for each data source type
+ */
   private async assignStream() {
     const dataSourceType = this.getDataSourceType();
 
-    if (dataSourceType === 'xmlFile') {
-      const xmlData = fs.readFileSync(this.dataSource as string, 'utf-8');
-      const jsonObject = await this.convertXmlToJson(xmlData);
+    let jsonObject: any[];
+
+    try {
+      switch (dataSourceType) {
+        case 'xmlFile':
+          const xmlFileData = fs.readFileSync(this.dataSource as string, 'utf-8');
+          jsonObject = await this.convertXmlToJson(xmlFileData);
+          break;
+
+        case 'jsonFile':
+          const jsonFileData = fs.readFileSync(this.dataSource as string, 'utf-8');
+          jsonObject = JSON.parse(jsonFileData);
+          break;
+
+        case 'xmlString':
+          jsonObject = await this.convertXmlToJson(this.dataSource as string);
+          break;
+
+        case 'jsonObject':
+          jsonObject = this.dataSource as any[];
+          break;
+
+        default:
+          throw new Error('Unsupported or missing data source type');
+      }
 
       this.dataSource = this.convertToArrayAndFilter(jsonObject);
-
       this.stream = this.createJsonStream();
-    }
-
-    if (dataSourceType === 'jsonFile') {
-      const jsonData = fs.readFileSync(this.dataSource as string, 'utf-8');
-      const jsonObject = JSON.parse(jsonData);
-
-      this.dataSource = this.convertToArrayAndFilter(jsonObject);
-
-      this.stream = this.createJsonStream();
-    }
-
-    if (dataSourceType === 'xmlString') {
-      const jsonObject = await this.convertXmlToJson(this.dataSource as string);
-
-      this.dataSource = this.convertToArrayAndFilter(jsonObject);
-
-      this.stream = this.createJsonStream();
-    }
-
-    if (dataSourceType === 'jsonObject') {
-      this.dataSource = this.convertToArrayAndFilter(this.dataSource as any[]);
-
-      this.stream = this.createJsonStream();
+    } catch (error) {
+      throw new Error(`Error assigning stream: ${error.message}`);
     }
   }
+
 
   /**
    * getDataSourceType
