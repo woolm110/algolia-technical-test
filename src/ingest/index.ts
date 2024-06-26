@@ -31,20 +31,46 @@ export class AlgoliaUploader {
   }
 
   private async assignStream() {
+    // account for file paths and XML strings
     if (typeof this.dataSource === 'string') {
-      if (this.isXmlString(this.dataSource)) {
+      // file path processing
+      if (this.isFilePath(this.dataSource)) {
+        if (this.dataSource.endsWith('.xml')) {
+          const xmlData = fs.readFileSync(this.dataSource, 'utf-8');
+          const jsonObject = await this.convertXmlToJson(xmlData);
+
+          this.dataSource = jsonObject.flatMap(item => {
+            return Array.isArray(item.root.row) ? item.root.row : [item.root.row];
+          });
+
+          this.stream = this.createJsonStream();
+        } else if (this.dataSource.endsWith('.json')) {
+          this.stream = fs.createReadStream(this.dataSource).pipe(StreamArray.withParser());
+        } else {
+          throw new Error('Unsupported file type');
+        }
+      }
+      // XML string processing
+      else if (this.isXmlString(this.dataSource)) {
         const jsonObject = await this.convertXmlToJson(this.dataSource);
 
         this.dataSource = jsonObject.map(item => item.root.row);
+
         this.stream = this.createJsonStream();
       } else {
-        this.stream = fs.createReadStream(this.dataSource).pipe(StreamArray.withParser());
+        throw new Error('Unsupported string data type');
       }
-    } else if (Array.isArray(this.dataSource)) {
+    }
+    // Direct JSON parsing
+    else if (Array.isArray(this.dataSource)) {
       this.stream = this.createJsonStream();
     } else {
       throw new Error('Unsupported data source type');
     }
+  }
+
+  private isFilePath(data: string): boolean {
+    return fs.existsSync(data);
   }
 
   private isXmlString(data: string): boolean {
@@ -56,6 +82,7 @@ export class AlgoliaUploader {
   private async convertXmlToJson(xml: string): Promise<any[]> {
     try {
       const result = await parseStringPromise(xml, { explicitArray: false });
+
       return Array.isArray(result) ? result : [result];
     } catch (error) {
       throw new Error('Error converting XML to JSON: ' + error.message);

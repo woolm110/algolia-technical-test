@@ -3,7 +3,8 @@ import { XMLParser } from 'fast-xml-parser';
 import { AlgoliaUploader } from './index';
 
 const INDEX_NAME = 'test';
-const DATA_SOURCE = 'public/update.json';
+// const DATA_SOURCE = 'public/update.json';
+const DATA_SOURCE = 'public/update.xml';
 // const DATA_SOURCE = [
 //   {
 //     "name": "3-Year Unlimited Cloud Storage Service Activation Card - Other",
