@@ -49,6 +49,8 @@ const DATA_SOURCE = 'public/update.xml';
 //     </root>
 // `;
 
-const uploader = new AlgoliaUploader(INDEX_NAME, DATA_SOURCE);
+const fieldsToUpdate = ['ratingratingtype', 'price_range', 'url', 'free_shipping', 'popularity', 'rating', 'custom']
+
+const uploader = new AlgoliaUploader(INDEX_NAME, DATA_SOURCE, fieldsToUpdate);
 
 uploader.updateData();
