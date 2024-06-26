@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Configure, DynamicWidgets, HierarchicalMenu, Hits, InstantSearch, Pagination, RefinementList, SortBy } from 'react-instantsearch';
+import { Breadcrumb, Configure, DynamicWidgets, HierarchicalMenu, Hits, InstantSearch, Pagination, RefinementList, SortBy, ClearRefinements } from 'react-instantsearch';
 import aa from 'search-insights';
 
 import { SearchBoxWithSuggestions } from './components/AutoComplete.component';
@@ -67,6 +67,7 @@ function App() {
         </div>
         <div className="search-content">
           <div className="refinement-list-container">
+            <ClearRefinements />
             <DynamicWidgets>
               <Panel header="Categories">
                 <HierarchicalMenu
